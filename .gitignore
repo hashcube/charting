@@ -1,0 +1,8 @@
+# Can ignore specific files
+.DS_Store
+conf.php
+
+
+# Use wildcards as well
+*~
+*.swp
