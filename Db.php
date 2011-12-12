@@ -1,12 +1,6 @@
 <?php
 class Db
 {
-  const DBHOST = 'localhost';
-  const USER = 'sudokuphp';
-  const PASS = 'successlist';
-  const DB = 'f8sudokuquest';
-  const CONFDB = 'chartio';
-
   protected static $instance;
   protected $conf_connfb;
   protected $connfb;
@@ -56,10 +50,10 @@ class Db
     }
   }
 
-  public function getCharts()
+
+  private function execGetCharts($query)
   {
     $this->db_connect();
-    $query = "SELECT * from charts";
     $res = mysql_query($query, $this->conf_connfb);
     print_r(mysql_error());
     $charts = array();
@@ -88,6 +82,18 @@ class Db
       }
     }
     return $charts;
+  }
+
+  public function getSpecificCharts($ids)
+  {
+    $query = "SELECT * from charts where chartid in($ids) order by chartid";
+    return $this->execGetCharts($query);
+  }
+
+  public function getCharts()
+  {
+    $query = "SELECT * from charts order by chartid";
+    return $this->execGetCharts($query);
   }
 
   public function executeQuery($query)
