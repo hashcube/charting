@@ -7,12 +7,27 @@ class Utils
     foreach($data as $id=>$charts){
       foreach($charts['charts'] as $i=>$chart_details){
         foreach($chart_details['result']['x'] as $j=>$value){
-          $value = date("d D M", strtotime($value));
-          $data[$id]['charts'][$i]['result']['x'][$j] = $value;
+          if(self::is_date($value)){
+            $value = date("d D M", strtotime($value));
+            $data[$id]['charts'][$i]['result']['x'][$j] = $value;
+          }
         }
       }
     }
     return $data;
+  }
+
+  public static function is_date($str)
+  {
+    $stamp = strtotime( $str );
+    if (!is_numeric($stamp))
+      return FALSE;
+    $month = date( 'm', $stamp );
+    $day   = date( 'd', $stamp );
+    $year  = date( 'Y', $stamp );
+    if (checkdate($month, $day, $year))
+      return TRUE;
+    return FALSE; 
   }
 
   public static function fillMissingDates($x ,$y, $startdate, $enddate)

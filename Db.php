@@ -33,6 +33,9 @@ class Db
       {
         exit("connecting to mysql failed");
       }
+      $set_time_zone = "SET time_zone = 'PST8PDT'";
+      mysql_query($set_time_zone, $this->conf_connfb);
+      print_r(mysql_error());
       mysql_select_db(CONFDB, $this->conf_connfb);
     }
     $this->app_db_connect();
@@ -108,6 +111,11 @@ class Db
     $result['x'] = $x;
     $result['y'] = $y;
     return $result;
+  }
+
+  public function db_close()
+  {
+    mysql_close($this->conf_connfb);
   }
 }
 
