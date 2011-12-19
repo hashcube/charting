@@ -88,8 +88,6 @@ function createPieChart(el, data) {
         dataLabels: {
           enabled: true,
           formatter: function() {
-            console.log('Point');
-            console.log(this.point);
             return '<b>'+ this.point.name +'</b>: '+ this.point.y;
           }
         }
@@ -110,9 +108,8 @@ function createChart(el, data) {
     };
     series_data.push(obj);
   });
-  //console.log(series_data);
 
-  var chartid = new Highcharts.Chart ({
+  var chartoptions = {
     chart: {
       renderTo: el,
       type: data.chart_type
@@ -132,13 +129,22 @@ function createChart(el, data) {
     },
     yAxis: {
       min : findMin(series_data),
-      max : findMax(series_data),
       title: {
         text: data.y_axis
       }
     },
     series: series_data
-  });
+  };
+  if(data.chart_type == 'stack column') {
+    chartoptions.plotOptions = {
+      column: {
+        stacking: 'normal'
+      }
+    };
+    chartoptions.chart.type = 'column';
+  }
+  var chartid = new Highcharts.Chart(chartoptions);
+  
   return chartid;
 }
 
