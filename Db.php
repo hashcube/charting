@@ -1,5 +1,4 @@
 <?php
-require_once('conf.php');
 class Db
 {
   protected static $instance;
@@ -50,7 +49,7 @@ class Db
       {
         exit("connecting to mysql failed");
       }
-      mysql_select_db(DB,$this->connfb);
+      mysql_select_db($GLOBALS['DB'],$this->connfb);
     }
   }
 
@@ -81,7 +80,7 @@ class Db
         $id = $row['chartid'];
         $chart_info['y_axis'] = $row['y_axis'];
         $query=$row['query_text'];
-        $chart_info['result'] = $this->executeQuery($query);
+        $chart_info['result'] = $this->executeQuery($query, $id);
         $charts[$id]['charts'][] = $chart_info;
       }
     }
@@ -100,8 +99,24 @@ class Db
     return $this->execGetCharts($query);
   }
 
-  public function executeQuery($query)
+  public function getPayingUsers()
   {
+    $q1 = "SELECT DISTINCT uid FROM credits";
+    $res = mysql_query($q1, $this->connfb);
+    while($row = mysql_fetch_array($res, MYSQL_ASSOC))
+    {
+      $uids[]=$row['uid'];
+    }
+    $uids = implode(',',$uids);
+    return $uids;
+  }
+
+  public function executeQuery($query, $id)
+  {
+    if($id == '800') {
+      $uids = $this->getPayingUsers();
+      $query = preg_replace('/var/',"$uids", $query);
+    }
     $res = mysql_query($query, $this->connfb);
     while($row = mysql_fetch_array($res, MYSQL_ASSOC))
     {

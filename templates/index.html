@@ -6,7 +6,6 @@
 <title>Charting</title>
 </head>
 <body>
-
 <script type='text/javascript'>
 Array.prototype.min = function() {
   var min = this[0];
@@ -31,20 +30,25 @@ Array.prototype.max = function() {
 var data = <?php echo $json_data; ?>;
 $(document).ready(function() {
 
-  var chartid = 0;
   _.each(data, function(chart) {
+    var chartid = chart.title;
+    $('#chart_selector').append("<option>"+chartid+"</option>");
     chartel_id = createDiv(chartid);
     if(chart.chart_type == "pie")
       createPieChart(chartel_id, chart);
     else
       createChart(chartel_id, chart);
     //createChart(chartel_id, chart);
-    chartid++;
+  });
+
+  $("#chart_selector").change(function() {
+    var chart = $('#chart_selector option:selected').text();
+    top.location.href = "#"+chart;
   });
 });
 
 function createDiv(chartid) {
-  var chartel_id = 'chart_'+chartid;
+  var chartel_id = chartid;
   var el = $("<div></div>");
   el.attr('id',chartel_id);
   el.css('margin', '20px');
@@ -106,12 +110,27 @@ function createChart(el, data) {
       name: d.y_axis,
       data: _.values(d.result.y)
     };
+    //obj.pointStart = Date.UTC(2011,10,21);
+    //obj.pointInterval = 24*3600*1000;
     series_data.push(obj);
   });
 
   var chartoptions = {
     chart: {
       renderTo: el,
+      alignTicks: false,
+      zoomType: 'x',
+      events : {
+        selection: function(event) {
+          if(event.yAxis) {
+            var min = event.yAxis[0].min;
+            var max = event.yAxis[0].max;
+            console.log(event.yAxis[0]);
+            min = findMin(series_data);
+            this.yAxis[0].setExtremes(min, max);
+          }
+        }
+      },
       type: data.chart_type
     },
     title: {
@@ -122,13 +141,17 @@ function createChart(el, data) {
         text: data.x_axis
       },
       categories: _.values(chart0_info.result.x),
+      //type: 'datetime',
+      //tickInterval: 24*3600*1000,
       labels: {
         rotation: -45,
         align: "right"
       }
     },
     yAxis: {
-      min : findMin(series_data),
+      startOnTick: false,
+      endOnTick: false,
+      maxPadding: '0.3',
       title: {
         text: data.y_axis
       }
@@ -139,6 +162,14 @@ function createChart(el, data) {
     chartoptions.plotOptions = {
       column: {
         stacking: 'normal'
+      }
+    };
+    chartoptions.tooltip = {
+      formatter: function() {
+        return '<b>'+ this.x +'</b><br/>'+
+          this.series.name +': '+ this.y +'<br/>'+
+          'Total: '+ this.point.stackTotal + '<br/>'+
+          '%: '+ this.point.percentage.toFixed(2) +'%';
       }
     };
     chartoptions.chart.type = 'column';
@@ -167,6 +198,8 @@ function findMax(series){
   return Max;
 }
 </script>
-<h1>Sudoku Quest</h1>
+<select id="chart_selector" style="position:fixed;top:20;right:20;z-index:10;">
+</select>
+
 </body>
 </html>
