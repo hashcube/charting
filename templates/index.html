@@ -122,13 +122,25 @@ function createChart(el, data) {
       zoomType: 'x',
       events : {
         selection: function(event) {
+          //this.toolbar.remove('alltime');
           if(event.yAxis) {
             var min = event.yAxis[0].min;
             var max = event.yAxis[0].max;
             console.log(event.yAxis[0]);
-            min = findMin(series_data);
+            console.log(event.xAxis[0]);
+            //min = findMin(series_data);
             this.yAxis[0].setExtremes(min, max);
           }
+        },
+        load: function(event) {
+          var max = this.xAxis[0].getExtremes().dataMax;
+          this.xAxis[0].setExtremes(max-31, max);
+          var chart = this;
+          var remove = function() {
+            chart.xAxis[0].setExtremes(null,null);
+            chart.toolbar.remove('alltime');
+          };
+          //this.toolbar.add('alltime','All Time','reset zoom', remove);
         }
       },
       type: data.chart_type
