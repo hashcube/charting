@@ -79,6 +79,7 @@ class Db
       {
         $id = $row['chartid'];
         $chart_info['y_axis'] = $row['y_axis'];
+        $chart_info['type'] = $row['type'];
         $query=$row['query_text'];
         $chart_info['result'] = $this->executeQuery($query, $id);
         $charts[$id]['charts'][] = $chart_info;

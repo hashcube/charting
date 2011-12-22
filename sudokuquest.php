@@ -4,7 +4,7 @@ require_once('Db.php');
 require_once('Utils.php');
 
 $db = Db::getInstance();
-$ids = "100,200,290,5,300,320,330,350,400,500,520,550,570,580,610,620,630,640,700,800";
+$ids = "100,200,290,5,300,320,330,350,400,500,520,550,570,580,610,620,630,640,650,700,800";
 $data = $db->getSpecificCharts($ids);
 
 /* specifying for which charts missing dates are to be filled */

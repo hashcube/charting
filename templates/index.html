@@ -186,6 +186,8 @@ function createChart(el, data) {
     };
     chartoptions.chart.type = 'column';
   }
+  else if(data.chart_type == 'combination') {
+  }
   var chartid = new Highcharts.Chart(chartoptions);
   
   return chartid;
