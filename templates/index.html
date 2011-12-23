@@ -134,7 +134,8 @@ function createChart(el, data) {
         },
         load: function(event) {
           var max = this.xAxis[0].getExtremes().dataMax;
-          this.xAxis[0].setExtremes(max-31, max);
+          var min = (max-31>0) ? max-31 : 0;
+          this.xAxis[0].setExtremes(min, max);
           var chart = this;
           var remove = function() {
             chart.xAxis[0].setExtremes(null,null);
