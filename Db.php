@@ -102,6 +102,7 @@ class Db
 
   public function getPayingUsers()
   {
+    $this->db_connect();
     $q1 = "SELECT DISTINCT uid FROM credits";
     $res = mysql_query($q1, $this->connfb);
     while($row = mysql_fetch_array($res, MYSQL_ASSOC))
@@ -110,6 +111,24 @@ class Db
     }
     $uids = implode(',',$uids);
     return $uids;
+  }
+
+  public function payingUsersLTVQuery()
+  {
+    $this->db_connect();
+    $query = "SELECT gold, SUM(amount) as LTV, credits.uid, country, gender, source, DATE(starttime), DATE(lasttime), max_milestone FROM "
+             ."credits, user_info, user_game WHERE credits.uid=user_info.uid AND credits.uid=user_game.uid GROUP BY uid ORDER BY LTV DESC";
+    $res = mysql_query($query, $this->connfb);
+    $data = array();
+    $i = 0;
+    while($row = mysql_fetch_array($res, MYSQL_ASSOC))
+    {
+      foreach($row as $key=>$value){
+        $data[$i][$key] = $value;
+      }
+      $i++;
+    }
+    return $data;
   }
 
   public function executeQuery($query, $id)

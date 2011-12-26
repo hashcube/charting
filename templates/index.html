@@ -28,6 +28,7 @@ Array.prototype.max = function() {
 
 <script type="text/javascript">
 var data = <?php echo $json_data; ?>;
+var ltv = <?php echo json_encode($LTV_data);?>;
 $(document).ready(function() {
 
   _.each(data, function(chart) {
@@ -45,6 +46,7 @@ $(document).ready(function() {
     var chart = $('#chart_selector option:selected').text();
     top.location.href = "#"+chart;
   });
+  writeLTVData();
 });
 
 function createDiv(chartid) {
@@ -65,6 +67,8 @@ function createPieChart(el, data) {
       name: d.y_axis
     };
     var vals = Array();
+    if(d.result.x == null)
+      return;
     var max_pies = (d.result.x.length>20) ? 20 : d.result.x.length;
     for(var i=0; i<max_pies; i++){
       vals[i] = Array(chart0_info.result.x[i], 
@@ -108,7 +112,8 @@ function createChart(el, data) {
   _.each(data.charts, function(d) {
     var obj = {
       name: d.y_axis,
-      data: _.values(d.result.y)
+      data: _.values(d.result.y),
+      type: d.type
     };
     //obj.pointStart = Date.UTC(2011,10,21);
     //obj.pointInterval = 24*3600*1000;
@@ -188,6 +193,7 @@ function createChart(el, data) {
     chartoptions.chart.type = 'column';
   }
   else if(data.chart_type == 'combination') {
+    chartoptions.chart.type = '';
   }
   var chartid = new Highcharts.Chart(chartoptions);
   
@@ -212,9 +218,19 @@ function findMax(series){
   });
   return Max;
 }
+
+function writeLTVData(){
+  $('body').append("<div id='ltv'></div>");
+  $('#ltv').html('<br>Gold | LTV | uid | Country | Gender | Source | Starttime | Lasttime | MaxMilestone<br><br>');
+  _.each(ltv, function(entry){
+    _.each(entry, function(vals){
+      $('#ltv').append(vals+" | ");
+    });
+    $('#ltv').append('<br>');
+  });
+}
 </script>
 <select id="chart_selector" style="position:fixed;top:20;right:20;z-index:10;">
 </select>
-
 </body>
 </html>
