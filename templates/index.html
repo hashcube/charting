@@ -28,7 +28,10 @@ Array.prototype.max = function() {
 
 <script type="text/javascript">
 var data = <?php echo $json_data; ?>;
-var ltv = <?php echo json_encode($LTV_data);?>;
+var ltv = <?php if($LTV_data)
+            echo json_encode($LTV_data);
+          else
+            echo 'undefined';?>;
 $(document).ready(function() {
 
   _.each(data, function(chart) {
@@ -46,7 +49,9 @@ $(document).ready(function() {
     var chart = $('#chart_selector option:selected').text();
     top.location.href = "#"+chart;
   });
-  writeLTVData();
+  if(ltv) {
+    writeLTVData();
+  }
 });
 
 function createDiv(chartid) {
@@ -115,6 +120,11 @@ function createChart(el, data) {
       data: _.values(d.result.y),
       type: d.type
     };
+    if(d.type!=null && d.type.search(/stack/) >= 0){
+      obj.type= '';
+      var i = d.type.search(/=/);
+      obj.stack = d.type.slice(i+1);
+    }
     //obj.pointStart = Date.UTC(2011,10,21);
     //obj.pointInterval = 24*3600*1000;
     series_data.push(obj);
@@ -144,7 +154,7 @@ function createChart(el, data) {
           var chart = this;
           var remove = function() {
             chart.xAxis[0].setExtremes(null,null);
-            chart.toolbar.remove('alltime');
+            //chart.toolbar.remove('alltime');
           };
           //this.toolbar.add('alltime','All Time','reset zoom', remove);
         }
@@ -176,6 +186,7 @@ function createChart(el, data) {
     },
     series: series_data
   };
+
   if(data.chart_type == 'stack column') {
     chartoptions.plotOptions = {
       column: {
