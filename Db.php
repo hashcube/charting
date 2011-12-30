@@ -152,6 +152,7 @@ class Db
 
   public function executeQuery($query, $id)
   {
+    $x = $y = $result = array();
     if($id == '800') {
       $uids = $this->getPayingUsers();
       $query = preg_replace('/var/',"$uids", $query);
@@ -162,8 +163,10 @@ class Db
       $x[]=$row['x'];
       $y[]=$row['y'];
     }
-    $result['x'] = $x;
-    $result['y'] = $y;
+    if(!empty($x)) {
+      $result['x'] = $x;
+      $result['y'] = $y;
+    }
     return $result;
   }
 

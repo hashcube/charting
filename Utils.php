@@ -6,10 +6,12 @@ class Utils
   {
     foreach($data as $id=>$charts){
       foreach($charts['charts'] as $i=>$chart_details){
-        foreach($chart_details['result']['x'] as $j=>$value){
-          if(self::is_date($value)){
-            $value = date("d D M", strtotime($value));
-            $data[$id]['charts'][$i]['result']['x'][$j] = $value;
+        if(!empty($chart_details['result'])) {
+          foreach($chart_details['result']['x'] as $j=>$value){
+            if(self::is_date($value)){
+              $value = date("d D M", strtotime($value));
+              $data[$id]['charts'][$i]['result']['x'][$j] = $value;
+            }
           }
         }
       }
@@ -27,7 +29,7 @@ class Utils
     $year  = date( 'Y', $stamp );
     if (checkdate($month, $day, $year))
       return TRUE;
-    return FALSE; 
+    return FALSE;
   }
 
   public static function fixMissingDates($data)
@@ -35,14 +37,16 @@ class Utils
     /* specifying for which charts missing dates are to be filled */
     foreach($data as $id=>$charts) {
       foreach($charts['charts'] as $i=>$chart_details) {
-        $x = $chart_details['result']['x'];
-        $y = $chart_details['result']['y'];
-        if($id!=1 && $id!=2 && $id!=290 && $id!=350 && $id!=320 && $id!=330) {
-          $res = self::fillMissingDates($x, $y, '2011-10-21', date("Y-m-d"));
-          $data[$id]['charts'][$i]['result']['x'] = $res['x'];
-          $data[$id]['charts'][$i]['result']['y'] = $res['y'];
+        if(!empty($chart_details['result'])) {
+          $x = $chart_details['result']['x'];
+          $y = $chart_details['result']['y'];
+          if($id!=1 && $id!=2 && $id!=290 && $id!=350 && $id!=320 && $id!=330) {
+            $res = self::fillMissingDates($x, $y, '2011-10-21', date("Y-m-d"));
+            $data[$id]['charts'][$i]['result']['x'] = $res['x'];
+            $data[$id]['charts'][$i]['result']['y'] = $res['y'];
+          }
         }
-      } 
+      }
     }
     return $data;
   }
