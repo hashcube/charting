@@ -2,6 +2,6 @@
   const DBHOST = 'localhost';
   const USER = 'myuser';
   const PASS = 'mypass';
-  const DB = 'mydb';
+  $DB = 'mydb';
   const CONFDB = 'mycharts';
 ?>
