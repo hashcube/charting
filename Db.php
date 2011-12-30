@@ -53,6 +53,25 @@ class Db
     }
   }
 
+  public function listAllCharts()
+  {
+    $this->db_connect();
+    $query = "SELECT * FROM charts ORDER BY chartid";
+    $res = mysql_query($query, $this->conf_connfb);
+    $charts = array();
+    $i = 0;
+    while($row = mysql_fetch_array($res,MYSQL_ASSOC))
+    {
+      $charts[$i]['id'] = $row['chartid'];
+      $charts[$i]['title'] = $row['title'];
+      $charts[$i]['type'] = $row['chart_type'];
+      $charts[$i]['xAxis'] = $row['x_axis'];
+      $charts[$i]['yAxis'] = $row['y_axis'];
+      $i++;
+    }
+    return $charts;
+  }
+
 
   private function execGetCharts($query)
   {
