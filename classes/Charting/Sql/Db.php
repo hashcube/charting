@@ -39,10 +39,10 @@ class Db
       print_r(mysql_error());
       mysql_select_db(\Charting\CONFDB, $this->conf_connfb);
     }
-    $this->app_db_connect();
+    //$this->app_db_connect();
   }
 
-  function app_db_connect()
+  function app_db_connect($db)
   {
     if(!$this->connfb)
     {
@@ -51,7 +51,7 @@ class Db
       {
         exit("connecting to mysql failed");
       }
-      mysql_select_db($GLOBALS['DB'],$this->connfb);
+      mysql_select_db($db,$this->connfb);
     }
   }
 
@@ -134,7 +134,9 @@ class Db
     while($row = mysql_fetch_array($res, MYSQL_ASSOC))
     {
       $ids=$row['charts'];
+      $db = $row['db'];
     }
+    $this->app_db_connect($db);
     return $this->getSpecificCharts($ids);
   }
 
