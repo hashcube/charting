@@ -18,21 +18,19 @@ Array.prototype.max = function() {
 
 $(document).ready(function() {
 
+  var chartNavItem  = _.template($('#chart-nav-item').html());
   _.each(data, function(chart) {
     var chartid = chart.title;
-    $('#chart_selector').append("<option>"+chartid+"</option>");
+    $('#chart_selector').append(chartNavItem({
+      "chartid": chartid
+    }));
     chartel_id = createDiv(chartid);
     if(chart.chart_type == "pie")
       createPieChart(chartel_id, chart);
     else
       createChart(chartel_id, chart);
-    //createChart(chartel_id, chart);
   });
 
-  $("#chart_selector").change(function() {
-    var chart = $('#chart_selector option:selected').text();
-    top.location.href = "#"+chart;
-  });
   if(ltv) {
     writeLTVData();
   }
@@ -215,12 +213,21 @@ function findMax(series){
 }
 
 function writeLTVData(){
-  $('body').append("<div id='ltv'></div>");
-  $('#ltv').html('<br>Gold | LTV | uid | Country | Gender | Source | Starttime | Lasttime | MaxMilestone<br><br>');
+  var ltvBody  = _.template($('#ltv-tbody').html());
+  var ltvRow  = _.template($('#ltv-row').html());
+  var ltvItem  = _.template($('#ltv-item').html());
+
+  $('body').append("<table class='zebra-striped' id='ltv' style='width:auto;margin:0 auto;'></table>");
+  $('#ltv').html('<thead><tr><th>Gold</th><th>LTV</th><th>uid</th><th>Country</th><th>Gender</th><th>Source</th><th>Starttime</th><th>Lasttime</th><th>MaxMilestone</th></tr></thead>');
+
+  var tbody = "";
   _.each(ltv, function(entry){
+    var ltv_item="";
     _.each(entry, function(vals){
-      $('#ltv').append(vals+" | ");
+      ltv_item += ltvItem({"val": vals });
     });
-    $('#ltv').append('<br>');
+    tbody += ltvRow({"row": ltv_item });
   });
+  $('#ltv').append(ltvBody({"tbody": tbody }));
+  $("#ltv").tablesorter();
 }

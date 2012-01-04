@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css"></link>
+    <style type="text/css">
+      body{padding-top:40px;}
+    </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
+    <script src="<?php echo $appurl;?>js/underscore.js" type="text/javascript"></script>
+    <script src="<?php echo $appurl;?>js/highcharts.src.js" type="text/javascript"></script>
+    <script src="<?php echo $appurl;?>js/chart.js" type="text/javascript"></script>
+    <script src="<?php echo $appurl;?>js/bootstrap/bootstrap-dropdown.js" type="text/javascript"></script>
+    <script src="<?php echo $appurl;?>js/jquery.tablesorter.min.js" type="text/javascript"></script>
+    <title>Charting</title>
+  </head>
+  <body>
+
+    <div class="topbar" data-dropdown="dropdown">
+      <div class="topbar-inner">
+        <div class="container">
+          <a class="brand" href="#">Charting</a>
+          <ul class="nav secondary-nav">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle">Charts</a>
+              <ul id="chart_selector" class="dropdown-menu">
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      var data = <?php echo $json_data; ?>;
+      var ltv = <?php if($LTV_data)
+        echo json_encode($LTV_data);
+        else
+          echo 'undefined';?>;
+    </script>
+
+    <!-- templates -->
+    <script id="chart-nav-item" type="text/template">
+      <li>
+        <a href="#<%=chartid %>">
+          <%= chartid %>
+        </a>
+      </li>
+    </script>
+
+    <script id="ltv-item" type="text/template">
+      <td>
+        <%= val %>
+      </td>
+    </script>
+
+    <script id="ltv-row" type="text/template">
+      <tr>
+        <%= row %>
+      </tr>
+    </script>
+
+    <script id="ltv-tbody" type="text/template">
+      <tbody>
+        <%= tbody %>
+      </tbody>
+    </script>
+
+  </body>
+</html>
