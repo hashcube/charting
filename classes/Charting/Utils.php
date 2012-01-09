@@ -42,7 +42,7 @@ class Utils
         if(!empty($chart_details['result'])) {
           $x = $chart_details['result']['x'];
           $y = $chart_details['result']['y'];
-          if($id!=1 && $id!=2 && $id!=290 && $id!=350 && $id!=320 && $id!=330) {
+          if($id!=1 && $id!=2 && $id!=290 && $id!=350 && $id!=320 && $id!=330 && $id!=530 && $id!=540) {
             $res = self::fillMissingDates($x, $y, '2011-10-21', date("Y-m-d"));
             $data[$id]['charts'][$i]['result']['x'] = $res['x'];
             $data[$id]['charts'][$i]['result']['y'] = $res['y'];
@@ -80,4 +80,6 @@ class Utils
   }
 
 }
+
 ?>
+
