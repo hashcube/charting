@@ -125,19 +125,74 @@ class Db
     return $charts;
   }
 
+  public function getActiveUsersData()
+  {
+    $app_ids = $this->getAppIds();
+    $charts = array();
+    $metrics = array('dau' => 'DAU', 'wau' => 'WAU', 'mau' => 'MAU', 'dau*100/wau' => 'Weekly Engagement',
+                        'dau*100/mau' => 'Monthly Engagement');
+    foreach($app_ids as $app_id => $app_name)
+    {
+      $charts[$app_id]['title'] = "$app_name Active Users";
+      $charts[$app_id]['chart_type'] = 'line';
+      $charts[$app_id]['x_axis'] = 'Date';
+      $charts[$app_id]['y_axis'] = 'No Of Users';
+      $charts[$app_id]['type'] = 'result';
+      
+      foreach($metrics as $metric => $metric_rep)
+      {
+        $data = $this->getActiveUsersChartData($metric, $app_id, $metric_rep);
+        $charts[$app_id]['charts'][] = $data;
+      }
+    }
+    return $charts;
+  }
+
+  private function getAppIds()
+  {
+    $query = "SELECT * FROM app_details";
+    $result = mysql_query($query);
+    $app_details = array();
+    while($row = mysql_fetch_array($result))
+    {
+      $app_details[$row['app_id']] = $row['app_name'];
+    }
+    return $app_details;
+  }
+
+  private function getActiveUsersChartData($metric, $app_id, $metric_rep)
+  {
+    $chart_info = array();
+    $query = "SELECT DATE(`date`) as x, $metric as y FROM `active_users` WHERE app_id = $app_id GROUP BY x ORDER BY x ASC";
+    $chart_info['result'] = $this->executeQuery($query, $app_id);
+    $chart_info['y_axis'] = $metric_rep;
+    return $chart_info;
+  }
+
   public function getChartsForTab($id)
   {
+    $data = $this->getTabData($id);
+    $ids = $data['chart_ids'];
+    $db = $data['db'];
+    $this->app_db_connect($db);
+    if($id == '4')
+    {
+      return $this->getActiveUsersData();
+    }
+    return $this->getSpecificCharts($ids);
+  }
+
+  private function getTabData($id)
+  {
     $this->db_connect();
-    $query = "SELECT * from tabs where id=$id";
+    $query = "SELECT * from tabs where id = $id";
     $res = mysql_query($query, $this->conf_connfb);
-    //print_r($res);
     while($row = mysql_fetch_array($res, MYSQL_ASSOC))
     {
       $ids=$row['charts'];
       $db = $row['db'];
     }
-    $this->app_db_connect($db);
-    return $this->getSpecificCharts($ids);
+    return(array("chart_ids" => $ids, "db" => $db));
   }
 
   public function getSpecificCharts($ids)
@@ -193,8 +248,8 @@ class Db
     $res = mysql_query($query, $this->connfb);
     while($row = mysql_fetch_array($res, MYSQL_ASSOC))
     {
-      $x[]=$row['x'];
-      $y[]=$row['y'];
+      $x[] = $row['x'];
+      $y[] = (is_numeric($row['y'])) ? round($row['y'], 2) : $row['y'];
     }
     if(!empty($x)) {
       $result['x'] = $x;

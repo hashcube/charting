@@ -37,14 +37,15 @@ class Tab extends Controller
   function displayCharts($id)
   {
     $data = $this->db->getChartsForTab($id);
-    $data = Utils::fixMissingDates($data);
+    if($id != '4')
+    {
+      $data = Utils::fixMissingDates($data);
+      $this->view->LTV_data = $this->db->payingUsersLTVQuery();
+    }
     $data = Utils::formatDates($data);
-    $this->view->LTV_data = $this->db->payingUsersLTVQuery();
     $this->view->json_data = json_encode($data, JSON_NUMERIC_CHECK);
-    //echo "<pre>"; print_r($LTV_data); echo "</pre>";
     echo $this->view->render(\Charting\PROJROOT.'static/template/index.html');
   }
-
 }
 
 ?>

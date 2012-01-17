@@ -31,7 +31,7 @@
 
     <script type="text/javascript">
       var data = <?php echo $json_data; ?>;
-      var ltv = <?php if($LTV_data)
+      var ltv = <?php if(isset($LTV_data))
         echo json_encode($LTV_data);
         else
           echo 'undefined';?>;
