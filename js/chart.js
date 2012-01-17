@@ -16,6 +16,17 @@ Array.prototype.max = function() {
   return max;
 }
 
+Number.prototype.addCommas = function() {
+  var parts = (this + '').split('.');
+  var int_part = parts[0];
+  var float_part = parts.length > 1 ? '.' + parts[1] : ''; 
+  var rgx = /(\d+)(\d{3})/;
+  while (rgx.test(int_part)) {
+    int_part = int_part.replace(rgx, '$1' + ',' + '$2');
+  }
+  return int_part + float_part;
+}
+
 $(document).ready(function() {
 
   var chartNavItem  = _.template($('#chart-nav-item').html());
@@ -178,8 +189,8 @@ function createChart(el, data) {
     chartoptions.tooltip = {
       formatter: function() {
         return '<b>'+ this.x +'</b><br/>'+
-          this.series.name +': '+ this.y +'<br/>'+
-          'Total: '+ this.point.stackTotal + '<br/>'+
+          this.series.name +': '+ this.y.addCommas() +'<br/>'+
+          'Total: '+ this.point.stackTotal.addCommas() + '<br/>'+
           '%: '+ this.point.percentage.toFixed(2) +'%';
       }
     };
@@ -188,8 +199,15 @@ function createChart(el, data) {
   else if(data.chart_type == 'combination') {
     chartoptions.chart.type = '';
   }
-  var chartid = new Highcharts.Chart(chartoptions);
+  else if(data.chart_type == 'line'){
+    chartoptions.tooltip = {
+      formatter : function() {
+        return '<b>' + this.series.name + ': ' + this.y.addCommas() + '</b>';
+      }
+    };
+  }
 
+  var chartid = new Highcharts.Chart(chartoptions);
   return chartid;
 }
 
