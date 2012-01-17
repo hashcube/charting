@@ -152,7 +152,6 @@ function createChart(el, data) {
           //this.toolbar.add('alltime','All Time','reset zoom', remove);
         }
       },
-      type: data.chart_type
     },
     title: {
       text: data.title
@@ -205,6 +204,11 @@ function createChart(el, data) {
         return '<b>' + this.series.name + ': ' + this.y.addCommas() + '</b>';
       }
     };
+
+    chartoptions.chart.defaultSeriesType = 'line';
+  }
+  else {
+    chartoptions.chart.type = data.chart_type;
   }
 
   var chartid = new Highcharts.Chart(chartoptions);
