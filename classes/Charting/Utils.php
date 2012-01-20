@@ -3,7 +3,8 @@ namespace Charting;
 
 class Utils
 {
-  private $charts_not_to_be_fixed = array(1,2,350,290,330,320,530,540,526);
+  private static $charts_not_to_be_fixed = array(1,2,350,290,330,320,530,540,526);
+
   /* Format dates according to d D M format*/
   public static function formatDates($data)
   {
@@ -43,7 +44,7 @@ class Utils
         if(!empty($chart_details['result'])) {
           $x = $chart_details['result']['x'];
           $y = $chart_details['result']['y'];
-          if(!in_array($id,$charts_not_to_be_fixed)) {
+          if(!in_array($id, self::$charts_not_to_be_fixed)) {
             $res = self::fillMissingDates($x, $y, self::getStartDateForMissingDates($id), date("Y-m-d"));
             $data[$id]['charts'][$i]['result']['x'] = $res['x'];
             $data[$id]['charts'][$i]['result']['y'] = $res['y'];
