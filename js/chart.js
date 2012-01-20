@@ -187,7 +187,7 @@ function createChart(el, data) {
     };
     chartoptions.tooltip = {
       formatter: function() {
-        return '<b>'+ this.x +'</b><br/>'+
+        return '<b>Date: '+ this.x +'</b><br/>'+
           this.series.name +': '+ this.y.addCommas() +'<br/>'+
           'Total: '+ this.point.stackTotal.addCommas() + '<br/>'+
           '%: '+ this.point.percentage.toFixed(2) +'%';
@@ -201,7 +201,7 @@ function createChart(el, data) {
   else if(data.chart_type == 'line'){
     chartoptions.tooltip = {
       formatter : function() {
-        return '<b>' + this.series.name + ': ' + this.y.addCommas() + '</b>';
+        return '<b>Date: ' + this.x + '<b><br/>' + this.series.name + ': ' + this.y.addCommas();
       }
     };
 
