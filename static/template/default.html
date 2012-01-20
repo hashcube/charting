@@ -1,0 +1,56 @@
+<?php require_once($projroot.'static/template/header.html'); ?>
+<style type="text/css">
+a {
+  text-decoration: none;
+  color: #333;
+}
+.project {
+  font-size:  16px;
+  font-weight: bold;
+  margin: 10px;
+}
+.tabs {
+  font-size: 14px;
+  margin-left: 15px;
+  display:none;
+}
+</style>
+
+<div>Available Projects</div>
+<div id="projects-container"></div>
+
+<script id="project-template" type="text/template">
+<div class="project"><a href="#" onclick="showTabs(this);"><%= name %></a></div>
+</script>
+<script type="text/template" id="tab-template">
+<div class="tabs"><a href="#"><%=tab%></a></div>
+</script>
+
+<script type="text/javascript">
+  var projects = <?php echo $projects; ?>;
+  console.log('before document ready');
+  var populateDetails = function() {
+    var project_template = _.template($('#project-template').html());
+    var tab_template = _.template($('#tab-template').html());
+    console.log('runnnng script');
+    for(var i=0;i<projects.length;i++) {
+      var project_ele = $('#projects-container').append(project_template({
+        name: projects[i].name
+      }));
+      for(var j=0;j<projects[i].tabs.length;j++) {
+        project_ele.append(tab_template({
+          tab: projects[i].tabs[j]
+        }));
+      }
+    }
+    console.log('added to projects div');
+  };
+  var showTabs = function(ele) {
+    console.log(ele);
+    $(ele).children().slideDown();
+  };
+  console.log(populateDetails);
+  $(window).load(populateDetails);
+</script>
+
+<?php require_once($projroot.'static/template/footer.html'); ?>

@@ -6,8 +6,10 @@ class Dispatcher
 {
   public static function dispatch($path_info="")
   {
+    if(strlen($path_info) <= 1)
+      $path_info = "";
     if($path_info=="") {
-      $controller_class = 'Charting\Controller\Project';
+      $controller_class = 'Charting\Controller\Main';
       $page = "";
     }
     else {

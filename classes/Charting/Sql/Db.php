@@ -72,6 +72,18 @@ class Db
     return $projects;
   }
 
+  public function getTabs($id)
+  {
+    $this->db_connect();
+    $query = "SELECT * FROM tabs WHERE id=$id";
+    $res = mysql_query($query, $this->conf_connfb);
+    while($row = mysql_fetch_array($res, MYSQL_ASSOC))
+    {
+      $tab = $row['name'];
+    }
+    return $tab;
+  }
+
   public function listAllCharts()
   {
     $this->db_connect();
