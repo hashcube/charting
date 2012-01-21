@@ -236,13 +236,32 @@ class Db
   {
     $this->db_connect();
     $query = "SELECT gold, SUM(amount) as LTV, credits.uid, country, gender, source, DATE(starttime), DATE(lasttime), max_milestone FROM "
-             ."credits, user_info, user_game WHERE credits.uid=user_info.uid AND credits.uid=user_game.uid GROUP BY uid ORDER BY LTV DESC";
+      ."credits, user_info, user_game WHERE credits.uid=user_info.uid AND credits.uid=user_game.uid GROUP BY uid ORDER BY LTV DESC";
+    $data = $this->getQueryData($query);
+    return $data;
+  }
+
+  public function payingUsersSegmentedData()
+  {
+    $this->db_connect();
+    $query = "SELECT max_milestone, starttime, DATE_FORMAT(date, '%d %b %T'), gender, country, amount, source, credits.uid "
+      . "FROM credits, user_game,  user_info WHERE date >= NOW() - INTERVAL 5 day AND "
+      . "credits.uid=user_info.uid AND credits.uid=user_game.uid ORDER BY date;";
+    $data = $this->getQueryData($query);
+    return $data;
+
+  }
+
+  private function getQueryData($query)
+  {
+    $this->db_connect();    
     $res = mysql_query($query, $this->connfb);
     $data = array();
     $i = 0;
     while($row = mysql_fetch_array($res, MYSQL_ASSOC))
     {
-      foreach($row as $key=>$value){
+      foreach($row as $key=>$value)
+      {
         $data[$i][$key] = $value;
       }
       $i++;

@@ -45,6 +45,10 @@ $(document).ready(function() {
   if(ltv) {
     writeLTVData();
   }
+  
+  if(paying_users_segmntd) {
+   writePayingUsersSegmentedData();
+  }
 });
 
 function createDiv(chartid) {
@@ -252,4 +256,36 @@ function writeLTVData(){
   });
   $('#ltv').append(ltvBody({"tbody": tbody }));
   $("#ltv").tablesorter();
+}
+
+function writePayingUsersSegmentedData(){
+  var body  = _.template($('#paying-users-segmntd-tbody').html());
+  var row  = _.template($('#paying-users-segmntd-row').html());
+  var item  = _.template($('#paying-users-segmntd-item').html());
+
+  $('body').append("<table class='zebra-striped' id='paying-users-segmntd' style='width:auto;margin:0 auto;'></table>");
+  $('#paying-users-segmntd').html('<thead>' +
+                                    '<tr><th>Paying Users Segmented Data</th></tr>' +
+                                     '<tr>' + 
+                                        '<th>MaxMilestone</th>' + 
+                                        '<th>Starttime</th>' +
+                                        '<th>Date</th>' +
+                                        '<th>Gender</th>' + 
+                                        '<th>Country</th>' +
+                                        '<th>Amount</th>' +
+                                        '<th>Source</th>' +
+                                        '<th>Uid</th>' +
+                                     '</tr>' +
+                                   '</thead>');
+
+  var tbody = "";
+  _.each(paying_users_segmntd, function(entry){
+    var sgmntd_item="";
+    _.each(entry, function(vals){
+      sgmntd_item += item({"val": vals });
+    });
+    tbody += row({"row": sgmntd_item });
+  });
+  $('#paying-users-segmntd').append(body({"tbody": tbody }));
+  $("#paying-users-segmntd").tablesorter();
 }

@@ -41,6 +41,7 @@ class Tab extends Controller
     {
       $data = Utils::fixMissingDates($data);
       $this->view->LTV_data = $this->db->payingUsersLTVQuery();
+      $this->view->paying_users_segmntd_data = $this->db->payingUsersSegmentedData();
     }
     $data = Utils::formatDates($data);
     $this->view->json_data = json_encode($data, JSON_NUMERIC_CHECK);

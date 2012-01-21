@@ -20,6 +20,11 @@
         echo json_encode($LTV_data);
         else
           echo 'undefined';?>;
+      var paying_users_segmntd = <?php if(isset($paying_users_segmntd_data))
+                                          echo json_encode($paying_users_segmntd_data);
+                                       else
+                                          echo 'undefined';
+                                  ?>;
     </script>
 
     <!-- templates -->
@@ -49,4 +54,24 @@
       </tbody>
     </script>
 
+    <script id="paying-users-segmntd-item" type="text/template">
+      <td>
+        <%= val %>
+      </td>
+    </script>
+
+    <script id="paying-users-segmntd-row" type="text/template">
+      <tr>
+        <%= row %>
+      </tr>
+    </script>
+
+    <script id="paying-users-segmntd-tbody" type="text/template">
+      <tbody>
+        <%= tbody %>
+      </tbody>
+    </script>
+
+  </body>
+</html>
 <?php require_once($projroot.'static/template/footer.html'); ?>
