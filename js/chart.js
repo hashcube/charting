@@ -334,6 +334,7 @@ function addChart() {
       }
     });
   });
+}
 
 function writePayingUsersSegmentedData(){
   var body  = _.template($('#paying-users-segmntd-tbody').html());
