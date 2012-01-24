@@ -59,7 +59,7 @@ function createDiv(chartid) {
 function createPieChart(el, data) {
   var chart0_info = data.charts[0];
   var series_data = Array();
-  _.each(data.charts, function(d){
+  _.each(data.charts, function(d) {
     var obj = {
       type : "pie",
       name: d.y_axis
@@ -67,8 +67,21 @@ function createPieChart(el, data) {
     var vals = Array();
     if(d.result.x == null)
       return;
-    var max_pies = (d.result.x.length>20) ? 20 : d.result.x.length;
-    for(var i=0; i<max_pies; i++){
+
+    // If pie chart has more than 20 sectors, (keep top 20 sectors and
+    // create a 'Others' sector as the 21st one) move the rest into 
+    // Others sector
+    if(d.result.x.length > 20) {
+      var others = 0;
+      while(d.result.x.length > 20) {
+        d.result.x.pop();
+        others += d.result.y.pop();
+      }
+      d.result.x[20] = "Others";
+      d.result.y[20] = others;
+    }
+
+    for(var i=0; i<d.result.x.length; i++){
       vals[i] = Array(chart0_info.result.x[i],
                       d.result.y[i]);
     }
@@ -134,8 +147,8 @@ function createChart(el, data) {
           if(event.yAxis) {
             var min = event.yAxis[0].min;
             var max = event.yAxis[0].max;
-            console.log(event.yAxis[0]);
-            console.log(event.xAxis[0]);
+            //console.log(event.yAxis[0]);
+            //console.log(event.xAxis[0]);
             //min = findMin(series_data);
             this.yAxis[0].setExtremes(min, max);
           }
@@ -252,4 +265,69 @@ function writeLTVData(){
   });
   $('#ltv').append(ltvBody({"tbody": tbody }));
   $("#ltv").tablesorter();
+}
+
+var graph_count = 0;
+
+function addChart() {
+  var chart_template = _.template($('#addChart-template').html());
+  $('#addChart-popup').html(chart_template());
+
+  // Opening the add chart dialog
+  $('#addChart-popup').dialog({
+    width: 700,
+    minHeight: 300,
+    position: [300, 100],
+    beforeClose: function() {
+      graph_count = 0;
+    },
+    modal: true
+  });
+
+  // Adding graphs to each chart
+  $('#addGraph').click(function() {
+    var graph_template = _.template($('#addGraphToChart-template').html());
+    $('#chart-graphs').append(graph_template({num: graph_count}));
+    graph_count++;
+  });
+
+  // Save the chart, when click on save
+  $('#saveChart').click(function() {
+    // Gather the details regarding the chart to be saved
+    var chartid= $('input[name="chartid"]').val();
+    var title= $('input[name="title"]').val();
+    var chart_type= $('input[name="chart_type"]').val();
+    var x_axis= $('input[name="x_axis"]').val();
+    var y_axis= $('input[name="y_axis"]').val();
+    var query = new Array();
+    var y_axis_graph = new Array();
+    var type_graph = new Array();
+    for(var i=0;i<graph_count;i++) {
+      query[i] = $('#graph'+i+' textarea[name="query"]').val();
+      y_axis_graph[i] = $('#graph'+i+' input[name="y_axis_graph"]').val();
+      type_graph[i] = $('#graph'+i+' input[name="type_graph"]').val();
+    }
+    query = JSON.stringify(query);
+    y_axis_graph = JSON.stringify(y_axis_graph);
+    type_graph = JSON.stringify(type_graph);
+
+    // Prepare the datastring to POST in ajax req
+    var dataString = "chartid="+chartid+"&title="+title+"&chart_type="+chart_type+
+      "&x_axis="+x_axis+"&y_axis="+y_axis+"&query="+query+"&y_axis_graph="+y_axis_graph+
+      "&type_graph="+type_graph+"&tabid="+tabid;
+
+    // Make ajax req
+    $.ajax({
+      type: 'POST',
+      data: dataString,
+      url: APPURL+"ajax/chart/saveChart",
+      success: function() {
+        $('#addChart-popup').dialog('close');
+        $('#notification').html('Chart Saved');
+        $.delay(1000, function() {
+          $('#notification').html('');
+        });
+      }
+    });
+  });
 }

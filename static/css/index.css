@@ -1,0 +1,33 @@
+#addChart-popup {
+  background: #FFF;
+  border: 1px solid #222;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 14px;
+  box-shadow: 2px 2px 20px #000;
+  margin: auto;
+  text-align: center;
+}
+.ui-icon-closethick {
+  position: realtive;
+  top: 30px;
+  right: 650px;
+}
+
+.popup {
+  padding: 3px;
+  margin: 3px;
+}
+
+.popup input,select {
+  height: 25px;
+}
+.popup textarea {
+  height: 60px;
+}
+
+#notification {
+  text-align: center;
+  color: red;
+  font-size: 16px;
+}

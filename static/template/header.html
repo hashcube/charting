@@ -1,15 +1,24 @@
 <html>
   <head>
     <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css"></link>
+    <link rel="stylesheet" href="<?php echo $appurl;?>static/css/index.css"></link>
     <style type="text/css">
       body{padding-top:40px;}
+      #addChart-popup{
+        display: none;
+      }
     </style>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
     <script src="<?php echo $appurl;?>js/underscore.js" type="text/javascript"></script>
     <script src="<?php echo $appurl;?>js/highcharts.src.js" type="text/javascript"></script>
     <script src="<?php echo $appurl;?>js/chart.js" type="text/javascript"></script>
     <script src="<?php echo $appurl;?>js/bootstrap/bootstrap-dropdown.js" type="text/javascript"></script>
     <script src="<?php echo $appurl;?>js/jquery.tablesorter.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      // Declaration of global varables
+      var APPURL = "<?php echo \Charting\APPURL;?>";
+    </script>
     <title>Charting</title>
   </head>
   <body>

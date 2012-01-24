@@ -4,6 +4,11 @@
         <div class="container">
           <a class="brand" href="#">Charting</a>
           <ul class="nav secondary-nav">
+            <li>
+              <a href="#" onclick="addChart();return false;">Add Chart</a>
+            </li>
+          </ul>
+          <ul class="nav secondary-nav">
             <li class="dropdown">
               <a href="#" class="dropdown-toggle">Charts</a>
               <ul id="chart_selector" class="dropdown-menu">
@@ -13,8 +18,35 @@
         </div>
       </div>
     </div>
+    <div id="notification"></div>
+
+    <script id="addGraphToChart-template" type="text/template">
+      <div>
+       <form id="graph<%=num%>">
+        <h5> Add a graph </h5>
+        <div class="popup">Query : <textarea name="query"></textarea></div>
+        <div class="popup">Y-axis display : <input type="text" name="y_axis_graph"></div>
+        <div class="popup">Type of graph: <input type="text" name="type_graph"></div>
+        </form>
+      </div>
+    </script>
+
+    <script id="addChart-template" type="text/template">
+      <h3> Add Chart </h3>
+      <h5> Basic Chart Info </h5>
+      <div class="popup">ID: <input type="text" name="chartid" size="5"></div>
+      <div class="popup">Title: <input type="text" name="title" size="30"></div>
+      <div class="popup">Chart Type: <input type="text" name="chart_type" size="30"></div>
+      <div class="popup">Name of x-axis: <input type="text" name="x_axis" size="30"></div>
+      <div class="popup">Name of y-axis: <input type="text" name="y_axis" size="30"></div>
+      <div class="popup" id="chart-graphs"></div>
+      <div class="popup"><a id="addGraph" href="#"> Add a graph </a></div>
+      <div class="popup"><input id="saveChart" type="submit" value="Save"></div>
+    </script>
+    <div id="addChart-popup"></div>
 
     <script type="text/javascript">
+      var tabid = <?php echo $tabid;?>;
       var data = <?php echo $json_data; ?>;
       var ltv = <?php if(isset($LTV_data))
         echo json_encode($LTV_data);

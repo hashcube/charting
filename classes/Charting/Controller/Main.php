@@ -20,6 +20,7 @@ class Main extends Controller
     $projects = $this->db_obj->getProjects();
     foreach($projects as $key=>$project) {
       $this->view->projects[$key]['name'] = $project['name'];
+      $this->view->projects[$key]['id'] = $project['id'];
       $tabs = explode(",", $project['tabs']);
       foreach($tabs as $id=>$tab) {
         $this->view->projects[$key]['tabs'][$id] = $this->db_obj->getTabs($tab);

@@ -44,6 +44,7 @@ class Tab extends Controller
     }
     $data = Utils::formatDates($data);
     $this->view->json_data = json_encode($data, JSON_NUMERIC_CHECK);
+    $this->view->tabid = $id;
     echo $this->view->render(\Charting\PROJROOT.'static/template/index.html');
   }
 }

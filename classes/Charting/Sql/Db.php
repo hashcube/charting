@@ -1,6 +1,9 @@
 <?php
 namespace Charting\Sql;
 
+define('GENROOT','/home/hashcube/server/www/genlib/');
+require_once(GENROOT.'GenLog.php');
+
 class Db
 {
   protected static $instance;
@@ -55,6 +58,41 @@ class Db
     }
   }
 
+  public function addChart($chartid, $title, $type, $x_axis, $y_axis)
+  {
+    $this->db_connect();
+    $chartid = mysql_real_escape_string($chartid);
+    $title = mysql_real_escape_string($title);
+    $type= mysql_real_escape_string($type);
+    $x_axis= mysql_real_escape_string($x_axis);
+    $y_axis= mysql_real_escape_string($y_axis);
+    $log = new \GenLog('debug',__FILE__, '/tmp/charting.log');
+    $query = "INSERT INTO charts VALUES ('$chartid', '$title', '$type', '$x_axis', '$y_axis')";
+    $res = mysql_query($query, $this->conf_connfb);
+    $log->info(mysql_error($this->conf_connfb));
+    return $res;
+  }
+
+  public function addGraph($chartid, $query_text, $y_axis, $type)
+  {
+    $this->db_connect();
+    $log = new \GenLog('debug',__FILE__, '/tmp/charting.log');
+    $query = "INSERT INTO chart_info VALUES ('$chartid', '$query_text', '$y_axis', '$type')";
+    $log->info($query);
+    mysql_query($query, $this->conf_connfb);
+    $log->info(mysql_error($this->conf_connfb));
+  }
+
+  public function addToTab($tabid, $chartid) 
+  {
+    $this->db_connect();
+    $log = new \GenLog('debug',__FILE__, '/tmp/charting.log');
+    $query = "UPDATE tabs SET charts=CONCAT_WS(',', charts, '$chartid') where id='$tabid'";
+    $log->info($query);
+    mysql_query($query, $this->conf_connfb);
+    $log->info(mysql_error($this->conf_connfb));
+  }
+
   public function getProjects()
   {
     $this->db_connect();
@@ -79,7 +117,8 @@ class Db
     $res = mysql_query($query, $this->conf_connfb);
     while($row = mysql_fetch_array($res, MYSQL_ASSOC))
     {
-      $tab = $row['name'];
+      $tab['name'] = $row['name'];
+      $tab['id'] = $row['id'];
     }
     return $tab;
   }
