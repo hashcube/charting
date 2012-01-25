@@ -257,18 +257,30 @@ function writeLTVData(){
   var ltvItem  = _.template($('#ltv-item').html());
 
   $('body').append("<table class='zebra-striped' id='ltv' style='width:auto;margin:0 auto;'></table>");
-  $('#ltv').html('<thead><tr><th>Gold</th><th>LTV</th><th>uid</th><th>Country</th><th>Gender</th><th>Source</th><th>Starttime</th><th>Lasttime</th><th>MaxMilestone</th></tr></thead>');
+  $('#ltv').html('<thead><tr><th>SNo</th><th>Gold</th><th>LTV</th><th>uid</th><th>Country</th><th>Gender</th><th>Source</th><th>Starttime</th><th>Lasttime</th><th>MaxMilestone</th></tr></thead>');
 
   var tbody = "";
+  var s_no = 0;
   _.each(ltv, function(entry){
     var ltv_item="";
-    _.each(entry, function(vals){
+    s_no++;
+    updated_entry = getUpdatedLTVObject(s_no, entry);
+    _.each(updated_entry, function(vals){
       ltv_item += ltvItem({"val": vals });
     });
     tbody += ltvRow({"row": ltv_item });
   });
   $('#ltv').append(ltvBody({"tbody": tbody }));
   $("#ltv").tablesorter();
+}
+
+function getUpdatedLTVObject(s_no, entry) {
+  new_entry = new Object();
+  new_entry.index = s_no;
+  for(var i in entry) {
+    new_entry[i] = entry[i];
+  }
+  return new_entry;
 }
 
 var graph_count = 0;
