@@ -57,6 +57,11 @@
                                        else
                                           echo 'undefined';
                                   ?>;
+      var revenue_data = <?php if(isset($revenue_segment_data))
+                                 echo json_encode($revenue_segment_data);
+                               else
+                                echo 'undefined';
+                         ?>;
     </script>
 
     <!-- templates -->
@@ -99,6 +104,24 @@
     </script>
 
     <script id="paying-users-segmntd-tbody" type="text/template">
+      <tbody>
+        <%= tbody %>
+      </tbody>
+    </script>
+
+    <script id="revenue-data-item" type="text/template">
+      <td>
+        <%= val %>
+      </td>
+    </script>
+
+    <script id="revenue-data-row" type="text/template">
+      <tr>
+        <%= row %>
+      </tr>
+    </script>
+
+    <script id="revenue-data-tbody" type="text/template">
       <tbody>
         <%= tbody %>
       </tbody>

@@ -41,14 +41,17 @@ $(document).ready(function() {
     else
       createChart(chartel_id, chart);
   });
-
   if(ltv) {
     writeLTVData();
   }
-  
   if(paying_users_segmntd) {
-   writePayingUsersSegmentedData();
+    writePayingUsersSegmentedData();
   }
+  if(revenue_data) {
+    writeRevenueSegmentedData(revenue_data['direct_users'], 'Direct-Users');
+    writeRevenueSegmentedData(revenue_data['nested_users'], 'Nested-Users');
+  }
+
 });
 
 function createDiv(chartid) {
@@ -378,4 +381,35 @@ function writePayingUsersSegmentedData(){
   });
   $('#paying-users-segmntd').append(body({"tbody": tbody }));
   $("#paying-users-segmntd").tablesorter();
+}
+
+function writeRevenueSegmentedData(data, id) {
+  var body  = _.template($('#revenue-data-tbody').html());
+  var row  = _.template($('#revenue-data-row').html());
+  var item  = _.template($('#revenue-data-item').html());
+
+  $('body').append("<table class='zebra-striped' id='revenue-data-"+id+"' style='width:auto;margin:0 auto;'></table>");
+  $('#revenue-data-'+id).html('<thead>' +
+                                    '<tr><th><h4>Revenue Source Segmented Data - '+id+'</h4></th></tr>' +
+                                     '<tr>' + 
+                                        '<th>Source</th>' + 
+                                        '<th>Avg Revenue Per User (in cents)</th>' +
+                                        '<th>Avg Revenue Per Paying User</th>' +
+                                        '<th>Total Users</th>' + 
+                                        '<th>Paying Users</th>' +
+                                        '<th>Avg Transactions Per Paying User</th>' +
+                                     '</tr>' +
+                                   '</thead>');
+
+  var tbody = "";
+  _.each(data, function(entry) {
+    var sgmntd_item="";
+    entry.arpu = (entry.arpu*100).toFixed(2);
+    _.each(entry, function(vals){
+      sgmntd_item += item({"val": vals });
+    });
+    tbody += row({"row": sgmntd_item });
+  });
+  $('#revenue-data-'+id).append(body({"tbody": tbody }));
+  $("#revenue-data-"+id).tablesorter();
 }

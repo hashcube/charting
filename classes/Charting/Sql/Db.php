@@ -281,6 +281,16 @@ class Db
 
   }
 
+  public function revenueSourceSegmentedQuery()
+  {
+    $this->app_db_connect('f8sqanalytics');
+    $query1 = "SELECT * FROM revenue_source_segmented";
+    $query2 = "SELECT * FROM revenue_source_segmented_nested";
+    $data1 = $this->getQueryData($query1);
+    $data2 = $this->getQueryData($query2);
+    return array('direct_users'=> $data1, 'nested_users'=> $data2);
+  }
+
   private function getQueryData($query)
   {
     $this->db_connect();    
