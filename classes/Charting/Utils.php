@@ -39,13 +39,18 @@ class Utils
   public static function fixMissingDates($data)
   {
     /* specifying for which charts missing dates are to be filled */
-    foreach($data as $id=>$charts) {
-      foreach($charts['charts'] as $i=>$chart_details) {
-        if(!empty($chart_details['result'])) {
+    foreach($data as $id=>$charts) 
+    {
+      foreach($charts['charts'] as $i=>$chart_details) 
+      {
+        if(!empty($chart_details['result'])) 
+        {
           $x = $chart_details['result']['x'];
           $y = $chart_details['result']['y'];
-          if(!in_array($id, self::$charts_not_to_be_fixed)) {
-            $res = self::fillMissingDates($x, $y, self::getStartDateForMissingDates($id), date("Y-m-d"));
+          if(self::is_date($x[0])) 
+          {
+            $start_date = $x[0];
+            $res = self::fillMissingDates($x, $y, $start_date, date("Y-m-d"));
             $data[$id]['charts'][$i]['result']['x'] = $res['x'];
             $data[$id]['charts'][$i]['result']['y'] = $res['y'];
           }
@@ -53,15 +58,6 @@ class Utils
       }
     }
     return $data;
-  }
-
-  private static function getStartDateForMissingDates($id)
-  {
-    if($id == '621')
-    {
-      return '2011-06-14';
-    }
-    return '2011-10-21';
   }
 
   public static function fillMissingDates($x ,$y, $startdate, $enddate)
