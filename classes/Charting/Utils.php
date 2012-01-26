@@ -49,8 +49,7 @@ class Utils
           $y = $chart_details['result']['y'];
           if(self::is_date($x[0])) 
           {
-            $start_date = $x[0];
-            $res = self::fillMissingDates($x, $y, $start_date, date("Y-m-d"));
+            $res = self::fillMissingDates($x, $y, self::getStartDateForMissingDates($id), date("Y-m-d"));
             $data[$id]['charts'][$i]['result']['x'] = $res['x'];
             $data[$id]['charts'][$i]['result']['y'] = $res['y'];
           }
@@ -58,6 +57,15 @@ class Utils
       }
     }
     return $data;
+  }
+
+  private static function getStartDateForMissingDates($id)
+  {
+    if($id == '621')
+    {
+      return '2011-06-14';
+    }
+    return '2011-10-21';
   }
 
   public static function fillMissingDates($x ,$y, $startdate, $enddate)
