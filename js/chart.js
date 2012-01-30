@@ -38,6 +38,8 @@ $(document).ready(function() {
     chartel_id = createDiv(chartid);
     if(chart.chart_type == "pie")
       createPieChart(chartel_id, chart);
+    else if(chart.chart_type == "table")
+      createTable(chartel_id, chart);
     else
       createChart(chartel_id, chart);
   });
@@ -235,6 +237,11 @@ function createChart(el, data) {
   return chartid;
 }
 
+function createTable(el, data) {
+  console.log(el);
+  console.log(data);
+}
+
 function findMin(series){
   var Min = series[0].data.min();
   _.each(series, function(obj){
@@ -389,22 +396,34 @@ function writeRevenueSegmentedData(data, id) {
   var item  = _.template($('#revenue-data-item').html());
 
   $('body').append("<table class='zebra-striped' id='revenue-data-"+id+"' style='width:auto;margin:0 auto;'></table>");
-  $('#revenue-data-'+id).html('<thead>' +
-                                    '<tr><th><h4>Revenue Source Segmented Data - '+id+'</h4></th></tr>' +
-                                     '<tr>' + 
-                                        '<th>Source</th>' + 
-                                        '<th>Avg Revenue Per User (in cents)</th>' +
-                                        '<th>Avg Revenue Per Paying User</th>' +
-                                        '<th>Total Users</th>' + 
-                                        '<th>Paying Users</th>' +
-                                        '<th>Avg Transactions Per Paying User</th>' +
-                                     '</tr>' +
-                                   '</thead>');
+
+  var thead_common_head = '<thead>' +
+                          '<tr><th>Revenue Source Segmented Data-'+id+'</th></tr>' +
+                          '<tr>' + 
+                          '<th>Source</th>' + 
+                          '<th>Total Revenue</th>'+
+                          '<th>Total Users</th>' + 
+                          '<th>Avg Revenue Per User (cents)</th>' +
+                          '<th>Paying Users</th>' +
+                          '<th>Avg Revenue Per Paying User</th>';
+  var thead_nested_users = '<th>Total Direct Users</th>' +
+                           '<th>Avg Revenue Per Direct User (cents)</th>';
+  var thead_common_tail = '<th>Avg Transactions Per Paying User</th>' +
+                          '<th>% of Paying Users</th>'+
+                          '</tr>' +
+                          '</thead>';
+  if(id == "Nested-Users")
+    var thead = thead_common_head + thead_nested_users + thead_common_tail;
+  else 
+    var thead = thead_common_head + thead_common_tail;
+  $('#revenue-data-'+id).html(thead);
 
   var tbody = "";
   _.each(data, function(entry) {
     var sgmntd_item="";
     entry.arpu = (entry.arpu*100).toFixed(2);
+    if(entry.arpdu)
+      entry.arpdu = (entry.arpdu*100).toFixed(2);
     _.each(entry, function(vals){
       sgmntd_item += item({"val": vals });
     });
