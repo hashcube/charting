@@ -11,6 +11,11 @@ class Chart
     if(isset($_POST['chartid']))
     {
       $db_obj = Db::getInstance();
+      if($db_obj->chartExists($_POST['chartid']))
+      {
+        echo "This chart id exists, please use a different id";
+        exit(0);
+      }
       $res = $db_obj->addChart($_POST['chartid'], $_POST['title'], $_POST['chart_type'], $_POST['x_axis'], $_POST['y_axis']);
       $queries = json_decode($_POST['query'],true);
       $y_axis_graphs = json_decode($_POST['y_axis_graph'], true);
@@ -20,7 +25,8 @@ class Chart
         $db_obj->addGraph($_POST['chartid'], $queries[$i], $y_axis_graphs[$i], $graph_types[$i]);
       }
       $db_obj->addToTab($tabid, $_POST['chartid']);
-      echo $res;
+      if($res)
+        echo "Chart Saved";
     }
   }
 }

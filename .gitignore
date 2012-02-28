@@ -1,7 +1,7 @@
 # Can ignore specific files
 .DS_Store
 conf.php
-
+xhprof*
 
 # Use wildcards as well
 *~

@@ -30,6 +30,8 @@ Number.prototype.addCommas = function() {
 $(document).ready(function() {
 
   var chartNavItem  = _.template($('#chart-nav-item').html());
+  console.profile('charting');
+  //var chart = data['1001'];
   _.each(data, function(chart) {
     var chartid = chart.title;
     $('#chart_selector').append(chartNavItem({
@@ -43,6 +45,7 @@ $(document).ready(function() {
     else
       createChart(chartel_id, chart);
   });
+  console.profileEnd();
   if(ltv) {
     writeLTVData();
   }
@@ -194,6 +197,7 @@ function createChart(el, data) {
       startOnTick: false,
       endOnTick: false,
       maxPadding: '0.3',
+      //ordinal: false,
       title: {
         text: data.y_axis
       }
@@ -251,7 +255,7 @@ function findMin(series){
   });
   return Min;
 }
-function findMax(series){
+function findMax(series) {
   var Max = series[0].data.max();
   _.each(series, function(obj){
     if(obj.data.max() > Max) {
@@ -347,9 +351,9 @@ function addChart() {
       type: 'POST',
       data: dataString,
       url: APPURL+"ajax/chart/saveChart",
-      success: function() {
+      success: function(data) {
         $('#addChart-popup').dialog('close');
-        $('#notification').html('Chart Saved');
+        $('#notification').html(data);
         $.delay(1000, function() {
           $('#notification').html('');
         });

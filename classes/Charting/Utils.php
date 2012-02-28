@@ -3,12 +3,12 @@ namespace Charting;
 
 class Utils
 {
-  private static $charts_not_to_be_fixed = array(1,2,350,290,330,320,530,540,526);
+  private static $charts_not_to_be_fixed = array(1,2,350,290,330,320,530,540,526, 1010);
 
   /* Format dates according to d D M format*/
   public static function formatDates($data)
   {
-    foreach($data as $id=>$charts){
+    foreach($data as $id=>$charts) {
       foreach($charts['charts'] as $i=>$chart_details){
         if(!empty($chart_details['result'])) {
           foreach($chart_details['result']['x'] as $j=>$value){

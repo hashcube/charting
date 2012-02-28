@@ -56,6 +56,14 @@ class Db
     }
   }
 
+  public function chartExists($id)
+  {
+    $this->db_connect();
+    $query = "select * from charts where chartid='$id'";
+    $res = mysql_query($query, $this->conf_connfb);
+    return mysql_num_rows($res);
+  }
+
   public function addChart($chartid, $title, $type, $x_axis, $y_axis)
   {
     $this->db_connect();

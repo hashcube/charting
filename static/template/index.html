@@ -24,9 +24,9 @@
       <div>
        <form id="graph<%=num%>">
         <h5> Add a graph </h5>
-        <div class="popup">Query : <textarea name="query"></textarea></div>
-        <div class="popup">Y-axis display : <input type="text" name="y_axis_graph"></div>
-        <div class="popup">Type of graph: <input type="text" name="type_graph"></div>
+        <div class="popup">Query : <textarea name="query<%=num%>"></textarea></div>
+        <div class="popup">Y-axis display : <input type="text" name="y_axis_grap<%=num%>h"></div>
+        <div class="popup">Type of graph: <input type="text" name="type_graph<%=num%>"></div>
         </form>
       </div>
     </script>
@@ -34,6 +34,7 @@
     <script id="addChart-template" type="text/template">
       <h3> Add Chart </h3>
       <h5> Basic Chart Info </h5>
+      <form id="addChart-form">
       <div class="popup">ID: <input type="text" name="chartid" size="5"></div>
       <div class="popup">Title: <input type="text" name="title" size="30"></div>
       <div class="popup">Chart Type: <input type="text" name="chart_type" size="30"></div>
@@ -42,6 +43,7 @@
       <div class="popup" id="chart-graphs"></div>
       <div class="popup"><a id="addGraph" href="#"> Add a graph </a></div>
       <div class="popup"><input id="saveChart" type="submit" value="Save"></div>
+      </form>
     </script>
     <div id="addChart-popup"></div>
 
