@@ -39,8 +39,7 @@ class Tab extends Controller
     $data = $this->db->getChartsForTab($id);
     if($id != '4')
     {
-      if($id != 2)
-        $data = Utils::fixMissingDates($data);
+      $data = Utils::fixMissingDates($data);
       $this->view->LTV_data = $this->db->payingUsersLTVQuery();
       $this->view->paying_users_segmntd_data = $this->db->payingUsersSegmentedData();
       $this->view->revenue_segment_data = $this->db->revenueSourceSegmentedQuery();
