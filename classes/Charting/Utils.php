@@ -70,7 +70,7 @@ class Utils
 
   public static function fillMissingDates($x ,$y, $startdate, $enddate)
   {
-    for($k=0; self::datediff($enddate, $startdate) > 0;  $k++) {
+    for($k=0; self::datediff($enddate, $startdate) >= 0;  $k++) {
       if(!in_array($startdate, $x)) {
         //$x[] = $startdate;
         $xarr1 = array_slice($x, 0, $k);
