@@ -5,6 +5,8 @@
   const CONFDB = 'mycharts';
 
   define('Charting\APPURL','http://localhost/charting/');
+  define('Charting\APPID','fb-app-id');
+  define('Charting\APPSECRET','fb-app-secret');
   define('Charting\PROJROOT', dirname(__FILE__) . '/' );
 
   // Set autoload classpath for loading classes when object is created, avoiding

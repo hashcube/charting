@@ -13,7 +13,7 @@ class Controller
     {
       \xhprof_enable(XHPROF_FLAGS_NO_BUILTINS+XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
     }
-
+    $this->user = $this->authenticate();
     $this->db = Db::getInstance();
     $this->view = new Template();
     $this->setConstants();
@@ -54,6 +54,20 @@ class Controller
     }
   }
 
+  protected function authenticate()
+  {
+    require_once(\Charting\PROJROOT.'php-sdk/src/facebook.php');
+    $facebook = new \Facebook(array("appId"=>\Charting\APPID, "secret"=>\Charting\APPSECRET));
+    $user = $facebook->getUser();
+    if (!$user)
+    {   
+      $params = array('redirect_uri' => \Charting\APPURL);
+      $loginUrl = $facebook->getLoginUrl($params);
+      echo("<script> top.location.href='$loginUrl'</script>");
+      exit();
+    }
+    return $user;
+  }
 
 }
 ?>
