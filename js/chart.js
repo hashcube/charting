@@ -270,7 +270,7 @@ function writeLTVData(){
   var ltvRow  = _.template($('#ltv-row').html());
   var ltvItem  = _.template($('#ltv-item').html());
 
-  $('body').append("<table class='zebra-striped' id='ltv' style='width:auto;margin:0 auto;'></table>");
+  $('body').append("<table class='table table-striped table-condensed table-bordered' id='ltv' style='width:auto;margin:0 auto;'></table>");
   $('#ltv').html('<thead><tr><th>SNo</th><th>Gold</th><th>LTV</th><th>uid</th><th>Country</th><th>Gender</th><th>Source</th><th>Starttime</th><th>Lasttime</th><th>MaxMilestone</th></tr></thead>');
 
   var tbody = "";
@@ -367,7 +367,7 @@ function writePayingUsersSegmentedData(){
   var row  = _.template($('#paying-users-segmntd-row').html());
   var item  = _.template($('#paying-users-segmntd-item').html());
 
-  $('body').append("<table class='zebra-striped' id='paying-users-segmntd' style='width:auto;margin:0 auto;'></table>");
+  $('body').append("<table class='table table-striped table-condensed table-bordered' id='paying-users-segmntd' style='width:auto;margin:0 auto;'></table>");
   $('#paying-users-segmntd').html('<thead>' +
                                     '<tr><th>Paying Users Segmented Data</th></tr>' +
                                      '<tr>' + 
@@ -399,7 +399,7 @@ function writeRevenueSegmentedData(data, id) {
   var row  = _.template($('#revenue-data-row').html());
   var item  = _.template($('#revenue-data-item').html());
 
-  $('body').append("<table class='zebra-striped' id='revenue-data-"+id+"' style='width:auto;margin:0 auto;'></table>");
+  $('body').append("<table class='table table-striped table-bordered table-condensed' id='revenue-data-"+id+"' style='width:auto;margin:0 auto;'></table>");
 
   var thead_common_head = '<thead>' +
                           '<tr><th>Revenue Source Segmented Data-'+id+'</th></tr>' +
