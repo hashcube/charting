@@ -27,25 +27,32 @@ Number.prototype.addCommas = function() {
   return int_part + float_part;
 }
 
-$(document).ready(function() {
+var chart_idx=-1;
+var chart_keys;
 
-  var chartNavItem  = _.template($('#chart-nav-item').html());
-  console.profile('charting');
-  //var chart = data['1001'];
-  _.each(data, function(chart) {
-    var chartid = chart.title;
-    $('#chart_selector').append(chartNavItem({
-      "chartid": chartid
-    }));
-    chartel_id = createDiv(chartid);
-    if(chart.chart_type == "pie")
-      createPieChart(chartel_id, chart);
-    else if(chart.chart_type == "table")
-      createTable(chartel_id, chart);
-    else
-      createChart(chartel_id, chart);
+$(document).ready(function() {
+  Highcharts.setOptions({
+    credits: {
+      enabled: false
+    }
   });
-  console.profileEnd();
+  chart_keys = _.keys(data);
+  drawNextChart();
+});
+
+function drawNextChart() {
+  //console.profile('charting');
+   chart_idx++;
+   chart = data[chart_keys[chart_idx]];
+   if(chart)
+     _.delay(drawChart, 500, chart);
+   if(chart_idx==chart_keys.length) {
+     createTables();
+   }
+  //console.profileEnd();
+}
+
+function createTables() {
   if(ltv) {
     writeLTVData();
   }
@@ -56,8 +63,23 @@ $(document).ready(function() {
     writeRevenueSegmentedData(revenue_data['direct_users'], 'Direct-Users');
     writeRevenueSegmentedData(revenue_data['nested_users'], 'Nested-Users');
   }
+}
 
-});
+function drawChart(chart) {
+  var chartNavItem  = _.template($('#chart-nav-item').html());
+  var chartid = chart.title;
+  $('#chart_selector').append(chartNavItem({
+  //$('#chart_selector').prepend(chartNavItem({
+    "chartid": chartid
+  }));
+  chartel_id = createDiv(chartid);
+  if(chart.chart_type == "pie")
+    createPieChart(chartel_id, chart);
+  else if(chart.chart_type == "table")
+    createTable(chartel_id, chart);
+  else
+    createChart(chartel_id, chart);
+}
 
 function createDiv(chartid) {
   var chartel_id = chartid;
@@ -102,7 +124,13 @@ function createPieChart(el, data) {
   });
   var chartid = new Highcharts.Chart({
     chart: {
-      renderTo: el
+      renderTo: el,
+      animation: false,
+      events: {
+        load: function(event) {
+          drawNextChart();
+        }
+      }
     },
     title: {
       text: data.title
@@ -151,6 +179,7 @@ function createChart(el, data) {
   var chartoptions = {
     chart: {
       renderTo: el,
+      animation: false,
       alignTicks: false,
       zoomType: 'x',
       events : {
@@ -175,6 +204,7 @@ function createChart(el, data) {
             //chart.toolbar.remove('alltime');
           };
           //this.toolbar.add('alltime','All Time','reset zoom', remove);
+          drawNextChart();
         }
       },
     },
