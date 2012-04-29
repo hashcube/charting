@@ -68,12 +68,12 @@ function createTables() {
 
 function getCurrentProject() {
   var arr = document.location.href.split("/");
-  return parseInt(arr[arr.length-1],10) - 1 ;
+  return parseInt(arr[arr.length-3],10) - 1 ;
 }
 
 function getCurrentTab() {
   var arr = document.location.href.split("/");
-  return parseInt(arr[arr.length-3],10) - 1;
+  return parseInt(arr[arr.length-1],10) - 1;
 }
 
 function listProjects() {
