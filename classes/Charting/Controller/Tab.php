@@ -37,6 +37,7 @@ class Tab extends Controller
   function displayCharts($id)
   {
     $data = $this->db->getChartsForTab($id);
+    $this->view->projects = json_encode($this->getProjects());
     if($id != '4')
     {
       $data = Utils::fixMissingDates($data);

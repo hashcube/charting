@@ -60,7 +60,7 @@ class Controller
     $facebook = new \Facebook(array("appId"=>\Charting\APPID, "secret"=>\Charting\APPSECRET));
     $user = $facebook->getUser();
     if (!$user)
-    {   
+    {
       $params = array('redirect_uri' => $this->getCurrentUrl());
       $loginUrl = $facebook->getLoginUrl($params);
       echo("<script> top.location.href='$loginUrl'</script>");
@@ -76,11 +76,27 @@ class Controller
       isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
       $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
         $protocol = 'https://';
-      }    
+      }
     else {
       $protocol = 'http://';
-    }    
+    }
     return $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+  }
+
+  protected function getProjects()
+  {
+    $db_obj = Db::getInstance();
+    $proj = array();
+    $projects = $db_obj->getProjects();
+    foreach($projects as $key=>$project) {
+      $proj[$key]['name'] = $project['name'];
+      $proj[$key]['id'] = $project['id'];
+      $tabs = explode(",", $project['tabs']);
+      foreach($tabs as $id=>$tab) {
+        $proj[$key]['tabs'][$id] = $db_obj->getTabs($tab);
+      }
+    }
+    return $proj;
   }
 }
 ?>

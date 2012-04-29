@@ -1,24 +1,41 @@
 <?php require_once($projroot.'static/template/header.html'); ?>
-    <div class="navbar" data-dropdown="dropdown">
+    <div class="navbar navbar-fixed-top" data-dropdown="dropdown">
       <div class="navbar-inner">
         <div class="container">
           <a class="brand" href="#">Charting</a>
-          <ul class="nav pull-right">
-            <li>
-              <a href="#" onclick="addChart();return false;">Add Chart</a>
-            </li>
-          </ul>
-          <ul class="nav pull-right">
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle">Charts<b class="caret"></b></a>
-              <ul id="chart_selector" class="dropdown-menu">
-              </ul>
-            </li>
-          </ul>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle">Projects<b class="caret"></b></a>
+                <ul id="project_selector" class="dropdown-menu">
+                </ul>
+              </li>
+            </ul>
+            <ul class="nav pull-right">
+              <li>
+                <a href="#" onclick="addChart();return false;">Add Chart</a>
+              </li>
+            </ul>
+            <ul class="nav pull-right">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle">Charts<b class="caret"></b></a>
+                <ul id="chart_selector" class="dropdown-menu">
+                </ul>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
+
     <div id="notification"></div>
+
+    <h1 id="proj_name" style="margin-left:50px;"></h1>
+
+    <div class="nav nav-tabs" style="margin-left:50px;">
+      <ul id="tabs_menu" class="nav nav-pills">
+      </ul>
+    </div>
 
     <script id="addGraphToChart-template" type="text/template">
       <div>
@@ -50,6 +67,7 @@
     <script type="text/javascript">
       var tabid = <?php echo $tabid;?>;
       var data = <?php echo $json_data; ?>;
+      var projects = <?php echo $projects; ?>;
       var ltv = <?php if(isset($LTV_data))
         echo json_encode($LTV_data);
         else
@@ -67,6 +85,20 @@
     </script>
 
     <!-- templates -->
+    <script id="project-nav-item" type="text/template">
+      <li>
+        <a href="<%= project_url %>">
+          <%= project_name %>
+        </a>
+      </li>
+    </script>
+
+    <script id="tab-item" type="text/template">
+      <li<% if(active) { %> class="active" <%}%>>
+        <a href="<%= url %>"><%= name %></a>
+      </li>
+    </script>
+
     <script id="chart-nav-item" type="text/template">
       <li>
         <a href="#<%=chartid %>">
@@ -128,7 +160,4 @@
         <%= tbody %>
       </tbody>
     </script>
-
-  </body>
-</html>
 <?php require_once($projroot.'static/template/footer.html'); ?>

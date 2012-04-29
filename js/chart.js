@@ -19,7 +19,7 @@ Array.prototype.max = function() {
 Number.prototype.addCommas = function() {
   var parts = (this + '').split('.');
   var int_part = parts[0];
-  var float_part = parts.length > 1 ? '.' + parts[1] : ''; 
+  var float_part = parts.length > 1 ? '.' + parts[1] : '';
   var rgx = /(\d+)(\d{3})/;
   while (rgx.test(int_part)) {
     int_part = int_part.replace(rgx, '$1' + ',' + '$2');
@@ -31,6 +31,7 @@ var chart_idx=-1;
 var chart_keys;
 
 $(document).ready(function() {
+  listProjects();
   Highcharts.setOptions({
     credits: {
       enabled: false
@@ -65,11 +66,42 @@ function createTables() {
   }
 }
 
+function getCurrentProject() {
+  var arr = document.location.href.split("/");
+  return parseInt(arr[arr.length-1],10) - 1 ;
+}
+
+function getCurrentTab() {
+  var arr = document.location.href.split("/");
+  return parseInt(arr[arr.length-3],10) - 1;
+}
+
+function listProjects() {
+  var projectNavItem  = _.template($('#project-nav-item').html());
+  var tabItem  = _.template($('#tab-item').html());
+  _.each(projects, function(project) {
+    project_url = APPURL + "project/" + project.id + "/tab/" + project.tabs[0].id;
+    $('#project_selector').append(projectNavItem({
+      "project_url": project_url,
+      "project_name": project.name
+    }));
+  });
+
+  current_project = projects[getCurrentProject()];
+  $("#proj_name").html(current_project.name);
+  _.each(current_project.tabs, function(tab) {
+    $('#tabs_menu').append(tabItem({
+      "url": APPURL + "project/" + current_project.id+"/tab/"+tab.id,
+      "name": tab.name,
+      "active": (getCurrentTab()+1 == tab.id)?true:false
+    }));
+  });
+}
+
 function drawChart(chart) {
   var chartNavItem  = _.template($('#chart-nav-item').html());
   var chartid = chart.title;
   $('#chart_selector').append(chartNavItem({
-  //$('#chart_selector').prepend(chartNavItem({
     "chartid": chartid
   }));
   chartel_id = createDiv(chartid);
@@ -103,7 +135,7 @@ function createPieChart(el, data) {
       return;
 
     // If pie chart has more than 20 sectors, (keep top 20 sectors and
-    // create a 'Others' sector as the 21st one) move the rest into 
+    // create a 'Others' sector as the 21st one) move the rest into
     // Others sector
     if(d.result.x.length > 20) {
       var others = 0;
@@ -400,11 +432,11 @@ function writePayingUsersSegmentedData(){
   $('body').append("<table class='table table-striped table-condensed table-bordered' id='paying-users-segmntd' style='width:auto;margin:0 auto;'></table>");
   $('#paying-users-segmntd').html('<thead>' +
                                     '<tr><th>Paying Users Segmented Data</th></tr>' +
-                                     '<tr>' + 
-                                        '<th>MaxMilestone</th>' + 
+                                     '<tr>' +
+                                        '<th>MaxMilestone</th>' +
                                         '<th>Starttime</th>' +
                                         '<th>Date</th>' +
-                                        '<th>Gender</th>' + 
+                                        '<th>Gender</th>' +
                                         '<th>Country</th>' +
                                         '<th>Amount</th>' +
                                         '<th>Source</th>' +
@@ -433,10 +465,10 @@ function writeRevenueSegmentedData(data, id) {
 
   var thead_common_head = '<thead>' +
                           '<tr><th>Revenue Source Segmented Data-'+id+'</th></tr>' +
-                          '<tr>' + 
-                          '<th>Source</th>' + 
+                          '<tr>' +
+                          '<th>Source</th>' +
                           '<th>Total Revenue</th>'+
-                          '<th>Total Users</th>' + 
+                          '<th>Total Users</th>' +
                           '<th>Avg Revenue Per User (cents)</th>' +
                           '<th>Paying Users</th>' +
                           '<th>Avg Revenue Per Paying User</th>';
@@ -448,7 +480,7 @@ function writeRevenueSegmentedData(data, id) {
                           '</thead>';
   if(id == "Nested-Users")
     var thead = thead_common_head + thead_nested_users + thead_common_tail;
-  else 
+  else
     var thead = thead_common_head + thead_common_tail;
   $('#revenue-data-'+id).html(thead);
 
